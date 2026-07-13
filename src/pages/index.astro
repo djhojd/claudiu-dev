@@ -1,11 +1,41 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const dateFormat = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'UTC',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Claudiu" description="Personal blog of Claudiu.">
+  <h1 class="mb-8 text-2xl font-bold tracking-tight">Writing</h1>
+
+  {
+    posts.length === 0 ? (
+      <p class="text-neutral-500">No posts yet.</p>
+    ) : (
+      <ul class="space-y-8">
+        {posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id}`} class="group block">
+              <h2 class="text-lg font-semibold group-hover:underline">
+                {post.data.title}
+              </h2>
+              <time datetime={post.data.pubDate.toISOString()} class="text-sm text-neutral-500">
+                {dateFormat.format(post.data.pubDate)}
+              </time>
+              <p class="mt-1 text-neutral-700">{post.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </Layout>

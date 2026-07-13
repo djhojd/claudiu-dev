@@ -22,3 +22,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# local design docs (kept out of version control)
+docs/superpowers/
+
+# subagent-driven-development scratch
+.superpowers/
+
+# cloudflare local state
+.wrangler/
+worker-configuration.d.ts

@@ -1,23 +1,41 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const siteTitle = 'Claudiu';
+const pageTitle = title === siteTitle ? title : `${title} · ${siteTitle}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+  </head>
+  <body class="min-h-screen bg-white text-neutral-900 antialiased">
+    <div class="mx-auto flex min-h-screen max-w-2xl flex-col px-4">
+      <header class="flex items-center justify-between py-6">
+        <a href="/" class="text-lg font-semibold tracking-tight">{siteTitle}</a>
+        <nav>
+          <a href="/" class="text-sm text-neutral-600 hover:text-neutral-900">Home</a>
+        </nav>
+      </header>
+      <main class="flex-1 py-4">
+        <slot />
+      </main>
+      <footer class="py-8 text-sm text-neutral-500">
+        © {new Date().getFullYear()} Claudiu
+      </footer>
+    </div>
+  </body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
